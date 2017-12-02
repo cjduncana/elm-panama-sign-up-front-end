@@ -1,0 +1,33 @@
+version: '2'
+services:
+  website:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - './:/app'
+    links:
+      - server
+    privileged: true
+  server:
+    image: cjduncana/elm-panama-sign-up-back-end:latest
+    links:
+      - 'mysql'
+    ports:
+      - '3001:3001'
+    environment:
+      DB_USER: 'root'
+      DB_PASSWORD: 'elm_panama_2018'
+      DB_NAME: 'elm_panama'
+      DB_HOST: 'mysql'
+    depends_on:
+      - 'mysql'
+  mysql:
+    image: 'mysql:5.5'
+    ports:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=elm_panama_2018
+      - MYSQL_DATABASE=elm_panama
